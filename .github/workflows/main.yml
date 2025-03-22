@@ -1,4 +1,4 @@
-name: smartgpg-test-applet
+name: Build
 
 
 on: workflow_dispatch
@@ -7,11 +7,10 @@ jobs:
   applet_tests:
     runs-on: ubuntu-20.04
     steps:
-      # Checkout repository
+
       - name: checkout repository
         uses: actions/checkout@v2
-      # Run actions
-      # Compilation tests
+
       - name: applet tests
         shell: bash
         run: |
