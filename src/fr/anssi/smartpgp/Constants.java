@@ -219,7 +219,7 @@ public final class Constants {
 
     protected static final byte[] ALGORITHM_ATTRIBUTES_DEFAULT = {
         (byte)0x01, /* RSA */
-        (byte)0x08, (byte)0x00, /* 2048 bits modulus */
+        (byte)0x10, (byte)0x00, /* 4096 bits modulus */
         (byte)0x00, (byte)0x11, /* 65537 = 17 bits public exponent */
         (byte)0x03 /* crt form with modulus */
     };
