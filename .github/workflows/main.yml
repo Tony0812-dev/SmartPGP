@@ -1,7 +1,7 @@
 name: smartgpg-test-applet
 
-# Run this workflow every time a new commit pushed to your repository
-on: push
+
+on: workflow_dispatch
 
 jobs:
   applet_tests:
@@ -27,28 +27,6 @@ jobs:
           echo "==== compile SmartPGP";
           cat build.xml | sed 's/<cap /<cap export="SmartPGPApplet" /' > /tmp/build.xml && mv /tmp/build.xml ./;
           JC_HOME=/tmp/jc304_kit/ ant;
-          # clone jcardsim repository, compile and install
-          echo "==== clone jcardsim repository, compile and install";
-          git clone https://github.com/licel/jcardsim;
-          cd jcardsim && export JC_CLASSIC_HOME=/tmp/jc305u4_kit/ && mvn initialize && mvn clean package && cd -;
-          # clone vsmartcard, compile and install
-          echo "==== clone vsmartcard, compile and install";
-          git clone https://github.com/frankmorgner/vsmartcard.git;
-          cd vsmartcard/virtualsmartcard && autoreconf --verbose --install && ./configure --sysconfdir=/etc && make && sudo make install && cd -;
-          # relaunch PCSC
-          echo "==== relaunch PCSC";
-          sudo killall -KILL pcscd 2> /dev/null || true;
-          sudo pcscd -fad 2>&1 > /tmp/log_pcsc &
-          sleep 2;
-          # launch jcardsim
-          echo "==== launch jcardsim";
-          java -cp jcardsim/target/jcardsim-3.0.5-SNAPSHOT.jar:SmartPGPApplet/smartpgp.jar com.licel.jcardsim.remote.VSmartCard .github/workflows/smartpgp.cfg 2>&1 > /tmp/log_jcardsim &
-          sleep 5;
-          # install SmartPGP
-          echo "==== test SmartPGP";
-          opensc-tool -l;
-          opensc-tool -s 80b800001810d276000124010304AFAF000000000000050000020F0F00;
-          # get card status
-          python3 .github/workflows/card-status.py;
-          # main tests
-          python3 .github/workflows/test_SmartPGP.py;
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./
